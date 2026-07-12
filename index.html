@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX AI</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+  <div class="sidebar">
+    <div class="logo">🤖 ForgeX AI</div>
+
+    <button class="new-chat" onclick="newChat()">
+      + New Chat
+    </button>
+
+    <div class="menu">
+      <button>💬 AI Chat</button>
+      <button>🖼 Image AI</button>
+      <button>💻 Code AI</button>
+      <button>📄 PDF AI</button>
+      <button>⚙ Settings</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="topbar">
+      <h2>ForgeX AI</h2>
+    </div>
+
+    <div id="chat">
+
+      <div class="bot">
+        👋 Welcome to ForgeX AI
+        <br><br>
+        How can I help you today?
+      </div>
+
+    </div>
+
+    <div id="typing" class="typing">
+      Thinking...
+    </div>
+
+    <div class="input-area">
+
+      <input
+      id="prompt"
+      type="text"
+      placeholder="Message ForgeX AI...">
+
+      <button onclick="startVoice()">🎤</button>
+
+      <button onclick="sendMessage()">➤</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
