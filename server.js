@@ -25,10 +25,8 @@ app.listen(PORT, () => {
 });
 } catch (err) {
   console.error("Gemini Error:", err);
-  console.error("Message:", err.message);
-  console.error("Stack:", err.stack);
 
   res.status(500).json({
-    reply: "❌ " + err.message
+    reply: err.message || JSON.stringify(err)
   });
 }
