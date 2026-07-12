@@ -18,25 +18,17 @@ app.post("/api/chat", async (req, res) => {
   try {
     const message = req.body.message;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: message
-    });
-
-    res.json({
-      reply: response.text
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      reply: "❌ AI Error."
-    });
-  }
-});
-
-const PORT = process.env.PORT || 3000;
+   const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`ForgeX AI running on port ${PORT}`);
 });
+} catch (err) {
+  console.error("Gemini Error:", err);
+  console.error("Message:", err.message);
+  console.error("Stack:", err.stack);
+
+  res.status(500).json({
+    reply: "❌ " + err.message
+  });
+}
