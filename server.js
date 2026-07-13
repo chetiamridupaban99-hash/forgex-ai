@@ -1,4 +1,4 @@
-require("dotenv").config();
+
 require("dotenv").config();
 
 const express = require("express");
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static("."));
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 app.post("/api/chat", async (req, res) => {
@@ -20,19 +20,19 @@ app.post("/api/chat", async (req, res) => {
     const message = req.body.message;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite"
-      contents: message
+      model: "gemini-2.5-flash-lite",
+      contents: message,
     });
 
     res.json({
-      reply: response.text
+      reply: response.text,
     });
 
   } catch (err) {
     console.error("Gemini Error:", err);
 
     res.status(500).json({
-      reply: err.message || JSON.stringify(err)
+      reply: err.message || "AI Error",
     });
   }
 });
