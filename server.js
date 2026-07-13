@@ -14,53 +14,36 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-app.post("/api/chat", async (req, res) => {
-  try {
-
-    const conversation = req.body.conversation || [];
-
-    const systemPrompt = `
-You are ForgeX AI, a modern AI assistant created and customized by Mridupaban Chetia.
+const SYSTEM_PROMPT = `
+You are ForgeX AI, created and customized by Mridupaban Chetia.
 
 Rules:
 - Your name is ForgeX AI.
-- Be friendly, professional and helpful.
-- Do not greet in every reply.
-- Only greet at the beginning of a new conversation.
+- Be professional, friendly and helpful.
+- Only greet once at the beginning of a conversation.
 - Answer directly.
-- Use proper formatting.
-- If someone asks who created you, answer:
-"ForgeX AI was created and customized by Mridupaban Chetia."
 `;
 
-    const chatText = conversation
-      .map(msg => `${msg.role}: ${msg.text}`)
-      .join("\n");
+app.post("/api/chat", async (req, res) => {
+  try {
 
-    const finalPrompt = `
-${systemPrompt}
-
-Conversation:
-${chatText}
-
-assistant:
-`;
+    const message = req.body.message;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: finalPrompt,
+      contents: `${SYSTEM_PROMPT}\n\nUser: ${message}`
     });
 
     res.json({
-      reply: response.text,
+      reply: response.text
     });
 
   } catch (err) {
 
-    console.error(err);
+    console.error("Gemini Error:", err);
 
     res.status(500).json({
-      reply: "⚠️ ForgeX AI is temporarily unavailable.",
+      reply: "⚠️ ForgeX AI is temporarily unavailable."
     });
 
   }
@@ -69,5 +52,5 @@ assistant:
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("🚀 ForgeX AI running on port " + PORT);
+  console.log(`🚀 ForgeX AI running on port ${PORT}`);
 });
