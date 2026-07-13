@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>ForgeX AI</title>
 
   <link rel="stylesheet" href="style.css">
@@ -13,59 +14,107 @@
 
 <div class="app">
 
-  <div class="sidebar">
-    <div class="logo">🤖 ForgeX AI</div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      🤖 <span>ForgeX AI</span>
+    </div>
 
     <button class="new-chat" onclick="newChat()">
-      + New Chat
+      ＋ New Chat
     </button>
 
     <div class="menu">
-      <button>💬 AI Chat</button>
-      <button>🖼 Image AI</button>
-      <button>💻 Code AI</button>
-      <button>📄 PDF AI</button>
-      <button>⚙ Settings</button>
-    </div>
-  </div>
 
-  <div class="main">
+      <button>💬 AI Chat</button>
+
+      <button>🖼 Image AI</button>
+
+      <button>💻 Code AI</button>
+
+      <button>📄 PDF AI</button>
+
+      <button>⚙ Settings</button>
+
+    </div>
+
+  </aside>
+
+  <!-- Main -->
+
+  <main class="main">
 
     <div class="topbar">
+
       <h2>ForgeX AI</h2>
+
+      <span class="status">
+        🟢 Online
+      </span>
+
     </div>
 
-    <div id="chat">
+    <!-- Chat -->
 
-      <div class="bot">
-        👋 Welcome to ForgeX AI
-        <br><br>
-        How can I help you today?
+    <div id="chat" class="chat">
+
+      <div class="bot welcome">
+
+        <h2>👋 Welcome to ForgeX AI</h2>
+
+        <p>
+          Your intelligent AI assistant is ready.
+        </p>
+
+        <p>
+          Ask me anything about coding, studies,
+          technology, writing, ideas and much more.
+        </p>
+
       </div>
 
     </div>
 
+    <!-- Typing -->
+
     <div id="typing" class="typing">
-      Thinking...
+      🤖 ForgeX AI is thinking...
     </div>
+
+    <!-- Input -->
 
     <div class="input-area">
 
       <input
-      id="prompt"
-      type="text"
-      placeholder="Message ForgeX AI...">
+        id="prompt"
+        type="text"
+        placeholder="Message ForgeX AI..."
+        autocomplete="off"
+      >
 
-      <button onclick="startVoice()">🎤</button>
+      <button
+        class="voice-btn"
+        onclick="startVoice()">
+        🎤
+      </button>
 
-      <button onclick="sendMessage()">➤</button>
+      <button
+        class="send-btn"
+        onclick="sendMessage()">
+        ➤
+      </button>
 
     </div>
 
-  </div>
+  </main>
 
 </div>
 
+<!-- Markdown Support -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Main Script -->
 <script src="script.js"></script>
 
 </body>
