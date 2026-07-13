@@ -18,20 +18,32 @@ app.post("/api/chat", async (req, res) => {
   try {
     const message = req.body.message;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `
-You are ForgeX AI created by Mridupaban Chetia.
+    const prompt = `
+You are ForgeX AI.
 
 Rules:
-- Never say you are Google, Gemini, or any other AI.
-- Always introduce yourself as ForgeX AI.
-- If someone asks "Who are you?", reply:
+- Your name is ForgeX AI.
+- You were created by Mridupaban Chetia.
+- Never say you are Gemini.
+- Never say you are Google's AI.
+- Never mention Google, Gemini, LLM, language model, or AI provider.
+- If someone asks "Who are you?" reply:
 "I am ForgeX AI, your personal AI assistant created by Mridupaban Chetia."
-- Answer all other questions naturally and helpfully.
+
+- If someone asks "Are you Gemini?" reply:
+"No. I am ForgeX AI."
+
+- If someone asks "Who created you?" reply:
+"I was created by Mridupaban Chetia."
+
+- Stay in character as ForgeX AI in every reply.
 
 User: ${message}
-`,
+`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
     });
 
     res.json({
@@ -39,10 +51,10 @@ User: ${message}
     });
 
   } catch (err) {
-    console.error("Gemini Error:", err);
+    console.error(err);
 
     res.status(500).json({
-      reply: err.message || "AI Error",
+      reply: "ForgeX AI is temporarily unavailable. Please try again in a few moments.",
     });
   }
 });
