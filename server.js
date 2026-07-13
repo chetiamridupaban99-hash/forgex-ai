@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const express = require("express");
@@ -21,7 +20,18 @@ app.post("/api/chat", async (req, res) => {
 
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: message,
+      contents: `
+You are ForgeX AI created by Mridupaban Chetia.
+
+Rules:
+- Never say you are Google, Gemini, or any other AI.
+- Always introduce yourself as ForgeX AI.
+- If someone asks "Who are you?", reply:
+"I am ForgeX AI, your personal AI assistant created by Mridupaban Chetia."
+- Answer all other questions naturally and helpfully.
+
+User: ${message}
+`,
     });
 
     res.json({
