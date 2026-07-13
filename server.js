@@ -20,7 +20,7 @@ app.post("/api/chat", async (req, res) => {
     const message = req.body.message;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
+      model: "gemini-2.5-flash-lite"
       contents: message
     });
 
