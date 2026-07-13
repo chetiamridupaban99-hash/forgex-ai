@@ -2,195 +2,223 @@ const chat = document.getElementById("chat");
 const input = document.getElementById("prompt");
 const typing = document.getElementById("typing");
 
-// Load Saved Chat
+// Conversation Memory
+let conversation = [];
+
+// Load Chat
 window.onload = () => {
+
   const history = localStorage.getItem("forgex_history");
 
-  if (history) {
+  if(history){
+
     chat.innerHTML = history;
-  } else {
+
+  }else{
+
     showWelcome();
+
   }
 
+  input.focus();
+
   scrollBottom();
+
 };
 
 // Welcome Screen
-function showWelcome() {
-  chat.innerHTML = `
-    <div class="bot welcome">
-      <h2>👋 Welcome to ForgeX AI</h2>
+function showWelcome(){
 
-      <p>Your intelligent AI assistant is ready.</p>
+chat.innerHTML = `
+<div class="bot welcome">
 
-      <p>
-      Ask me anything about coding, studies,
-      technology, writing, business or ideas.
-      </p>
-    </div>
-  `;
+<h2>👋 Welcome to ForgeX AI</h2>
 
-  saveChat();
+<p>Your intelligent AI assistant is ready.</p>
+
+<p>
+Ask anything about coding,
+technology,
+studies,
+writing,
+business,
+or ideas.
+</p>
+
+</div>
+`;
+
+saveChat();
+
 }
 
 // Save Chat
-function saveChat() {
-  localStorage.setItem(
-    "forgex_history",
-    chat.innerHTML
-  );
+function saveChat(){
+
+localStorage.setItem(
+"forgex_history",
+chat.innerHTML
+);
+
 }
 
-// Scroll Bottom
-function scrollBottom() {
-  chat.scrollTop = chat.scrollHeight;
+// Scroll
+function scrollBottom(){
+
+chat.scrollTop = chat.scrollHeight;
+
 }
 
 // New Chat
-function newChat() {
+function newChat(){
 
-  localStorage.removeItem("forgex_history");
+conversation=[];
 
-  showWelcome();
+localStorage.removeItem("forgex_history");
 
-  scrollBottom();
+showWelcome();
+
+scrollBottom();
+
 }
 
-// Enter Key
-input.addEventListener("keydown", (e) => {
+// Enter
+input.addEventListener("keydown",(e)=>{
 
-  if (e.key === "Enter") {
+if(e.key==="Enter"){
 
-    sendMessage();
+sendMessage();
 
-  }
+}
 
 });
 
-// Voice Input
-function startVoice() {
+// Voice
+function startVoice(){
 
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+const SpeechRecognition=
+window.SpeechRecognition||
+window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
+if(!SpeechRecognition){
 
-    alert("Voice input is not supported.");
+alert("Voice input not supported.");
 
-    return;
-
-  }
-
-  const recognition = new SpeechRecognition();
-
-  recognition.lang = "en-US";
-
-  recognition.onresult = (event) => {
-
-    input.value =
-      event.results[0][0].transcript;
-
-  };
-
-  recognition.start();
+return;
 
 }
 
-// Create Message Bubble
-function addMessage(type, html) {
+const recognition=new SpeechRecognition();
 
-  const div = document.createElement("div");
+recognition.lang="en-US";
 
-  div.className = type;
+recognition.onresult=(event)=>{
 
-  div.innerHTML = html;
+input.value=event.results[0][0].transcript;
 
-  chat.appendChild(div);
+};
 
-  saveChat();
+recognition.start();
 
-  scrollBottom();
+}
+
+// Add Message
+function addMessage(type,html){
+
+const div=document.createElement("div");
+
+div.className=type;
+
+div.innerHTML=html;
+
+chat.appendChild(div);
+
+saveChat();
+
+scrollBottom();
 
 }
 
 // Send Message
-async function sendMessage() {
+async function sendMessage(){
 
-  const message = input.value.trim();
+const message=input.value.trim();
 
-  if (!message) return;
+if(!message) return;
 
-  addMessage("user", message);
+// Save user message in memory
+conversation.push({
+role:"user",
+text:message
+});
 
-  input.value = "";
+addMessage("user",message);
 
-  typing.style.display = "block";
+input.value="";
 
-  scrollBottom();
+typing.style.display="block";
 
-  try {
+scrollBottom();
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message
-      })
-    });
+try{
 
-    const data = await response.json();
+const response=await fetch("/api/chat",{
 
-    typing.style.display = "none";
+method:"POST",
 
-    let reply = data.reply || "No response.";
+headers:{
+"Content-Type":"application/json"
+},
 
-    // Markdown Support
-    if (window.marked) {
-      reply = marked.parse(reply);
-    } else {
-      reply = reply.replace(/\n/g, "<br>");
-    }
+body:JSON.stringify({
 
-    addMessage("bot", reply);
+conversation
 
-  } catch (err) {
+})
 
-    typing.style.display = "none";
+});
 
-    addMessage(
-      "bot",
-      "❌ <b>Connection Failed</b><br><br>Please check your internet connection or try again."
-    );
+const data=await response.json();
 
-    console.error(err);
+typing.style.display="none";
 
-  }
+let reply=data.reply||"No response.";
+
+if(window.marked){
+
+reply=marked.parse(reply);
+
+}else{
+
+reply=reply.replace(/\n/g,"<br>");
 
 }
 
-// Auto Focus
-window.addEventListener("load", () => {
-  input.focus();
+// Save AI reply in memory
+conversation.push({
+
+role:"assistant",
+
+text:data.reply
+
 });
 
-// Keep scroll at bottom after images/fonts load
-window.addEventListener("load", scrollBottom);
+addMessage("bot",reply);
 
-// Optional: Auto-resize on window change
-window.addEventListener("resize", scrollBottom);
+}catch(err){
 
-// Clear typing indicator on page load
-typing.style.display = "none";
+typing.style.display="none";
 
-// Keep chat saved before leaving page
-window.addEventListener("beforeunload", saveChat);
+addMessage(
 
-// Helper: Escape HTML (optional if you later need it)
-function escapeHTML(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
+"bot",
+
+"❌ <b>Connection Failed</b><br><br>Please check your internet connection and try again."
+
+);
+
+console.error(err);
+
+}
+
 }
